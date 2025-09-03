@@ -3,6 +3,7 @@ import os
 
 archivo_clientes = 'clientes.csv'
 archivo_pedidos = 'pedidos.csv'
+archivo_ventas = 'ventas.csv'
 
 def inicializar_archivos():
     if not os.path.exists(archivo_clientes):
@@ -20,6 +21,14 @@ def inicializar_archivos():
             writer.writerow(['2','2','mouse','20.50','2','1'])
             writer.writerow(['3','1','teclado','45.00','1','1'])
             writer.writerow(['4','3','monitor','150.00','1','0'])
+    if not os.path.exists(archivo_ventas):
+        with open(archivo_ventas, 'w', encoding='utf-8', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow(['id_pedido','id_cliente','cantidad','activo'])
+            writer.writerow(['1','1','1','1'])
+            writer.writerow(['2','2','2','1'])
+            writer.writerow(['3','1','1','1'])
+            writer.writerow(['4','3','1','0'])
 
 def registrar_cliente():
     with open(archivo_clientes, 'r', encoding='utf-8') as file:
@@ -31,7 +40,6 @@ def registrar_cliente():
     with open(archivo_clientes, 'a', encoding='utf-8', newline='') as file:
         writer = csv.writer(file)
         writer.writerow([id_cliente,nombre,apellido,telefono,1])
-
 
 def listar_clientes():
     with open(archivo_clientes, 'r', encoding='utf-8') as file:
@@ -76,16 +84,22 @@ def listar_pedidos_cliente():
                 print(line)
 
 def guardar_venta():
-    with open(archivo_pedidos, 'r', encoding='utf-8') as file:
+    with open(archivo_ventas, 'r', encoding='utf-8') as file:
         reader = list(csv.reader(file))
     id_pedido = len(reader)
     id_cliente = input('id cliente: ')
-    producto = input('producto: ')
-    precio = float(input('precio: '))
-    cantidad = int(input('cantidad: '))
-    with open(archivo_pedidos, 'a', encoding='utf-8', newline='') as file:
+    cantidad = input('cantidad: ')
+    with open(archivo_ventas, 'a', encoding='utf-8', newline='') as file:
         writer = csv.writer(file)
-        writer.writerow([id_pedido,id_cliente,producto,precio,cantidad,1])
+        writer.writerow([id_pedido,id_cliente,cantidad,1])
+
+def listar_ventas():
+    with open(archivo_ventas, 'r', encoding='utf-8') as file:
+        reader = csv.reader(file)
+        next(reader)
+        for line in reader:
+            if line[3] == '1':
+                print(line)
 
 def listar_ventas_cliente():
     nombre_cliente = input('nombre cliente: ')
@@ -120,7 +134,8 @@ def menu():
         print('5. listar pedidos cliente')
         print('6. guardar venta')
         print('7. listar ventas cliente')
-        print('8. salir')
+        print('8. listar ventas')
+        print('9. salir')
         opcion = input('opcion: ')
         if opcion == '1':
             registrar_cliente()
@@ -137,6 +152,8 @@ def menu():
         elif opcion == '7':
             listar_ventas_cliente()
         elif opcion == '8':
+            listar_ventas()
+        elif opcion == '9':
             break
         else:
             print('opcion invalida')
